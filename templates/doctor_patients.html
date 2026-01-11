@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="topic">
+  <h1>My Patients</h1>
+</div>
+
+<table class="table">
+  <thead class="table-dark">
+    <tr>
+      <th>Sr.No</th>
+      <th>Patient ID
+        <form method="get" action="{{ url_for('doctor_patients') }}" class="table-search-form">
+          <input type="text" name="search_id" placeholder="Search by ID..." value="{{ search_id }}">
+          <button type="submit">Search</button>
+        </form>
+      </th>
+      <th>Name
+        <form method="get" action="{{ url_for('doctor_patients') }}" class="table-search-form">
+          <input type="text" name="search" placeholder="Search patients..." value="{{ search_name }}">
+          <button type="submit">Search</button>
+        </form>
+      </th>
+      <th>Email</th>
+      <th>Phone</th>
+      <th>Age/Gender</th>
+      <th>Blood Group</th>
+      <th>Last Appointment</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% set serial_number = namespace(value=0) %}
+    {% for patient in patients %}
+      {% set serial_number.value = serial_number.value + 1 %}
+      <tr>
+        <td>{{ serial_number.value }}</td>
+        <td>{{ patient.id }}</td>
+        <td>{{ patient.name }}</td>
+        <td>{{ patient.email }}</td>
+        <td>{{ patient.phone }}</td>
+        <td>{{ patient.age }}/{{ patient.gender }}</td>
+        <td>{{ patient.blood_group or 'N/A' }}</td>
+        <td>
+          {% if patient.last_appointment %}
+            {{ patient.last_appointment.strftime('%Y-%m-%d') }}
+          {% else %}
+            No appointments
+          {% endif %}
+        </td>
+        <td>
+          <a href="{{ url_for('view_patient_history', patient_id=patient.id) }}">
+            <button class="btn-small">View History</button>
+          </a>
+        </td>
+      </tr>
+    {% else %}
+      <tr>
+        <td colspan="9" style="text-align: center; padding: 20px;">
+          No patients found. You haven't had any appointments yet.
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

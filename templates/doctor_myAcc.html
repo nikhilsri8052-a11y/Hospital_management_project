@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="topic">
+  <h1 style="text-align:center; margin-top:30px;">Welcome, {{ doctor.name }}</h1>
+</div>
+<div class="admin-account-container">
+  <h2 style="text-align:center; margin-bottom:20px;">My Account</h2>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="flash-message {{ category }}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+  <div class="account-actions">
+    <a href="{{ url_for('doctor_change_pass') }}">
+      <button class="btn-primary">Change Password</button>
+    </a>
+    <a href="{{ url_for('logout') }}">
+      <button class="btn-secondary">Logout</button>
+    </a>
+  </div>
+</div>
+{% endblock %}

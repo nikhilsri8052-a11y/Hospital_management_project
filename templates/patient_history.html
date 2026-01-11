@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="appointment-form">
+
+    <h2>Patient Medical Records - {{ patient.name }}</h2>
+
+    <div id="print-area">
+
+        <div class="patient-info">
+            <h3>Patient Information</h3>
+            <div class="info-grid">
+                <p><strong>Name:</strong> {{ patient.name }}</p>
+                <p><strong>Email:</strong> {{ patient.email }}</p>
+                <p><strong>Phone:</strong> {{ patient.phone }}</p>
+                <p><strong>Age:</strong> {{ patient.age }}</p>
+                <p><strong>Gender:</strong> {{ patient.gender }}</p>
+                <p><strong>Blood Group:</strong> {{ patient.blood_group }}</p>
+            </div>
+        </div>
+
+        <div class="record-box">
+            <h3>Add New Medical Record</h3>
+            <form method="POST" action="{{ url_for('add_patient_record', patient_id=patient.id) }}">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="medical_history">Medical History & Diagnosis</label>
+                        <textarea id="medical_history" name="medical_history" rows="3"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="allergies">Allergies</label>
+                        <textarea id="allergies" name="allergies" rows="2"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="current_medications">Prescription & Medications</label>
+                        <textarea id="current_medications" name="current_medications" rows="3"></textarea>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="notes">Clinical Notes & Observations</label>
+                        <textarea id="notes" name="notes" rows="3"></textarea>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary">Add Medical Record</button>
+            </form>
+        </div>
+
+        <div class="record-box">
+            <h3>Medical Records History</h3>
+
+            {% if history %}
+                {% for record in history %}
+                <div class="history-record">
+                    <div class="record-header">
+                        <strong>Record Date: {{ record.date_recorded.strftime('%Y-%m-%d %I:%M %p') }}</strong>
+                        <strong>Visit No: {{ record.visit_no }}</strong>
+                        <div class="record-actions">
+                            <a href="{{ url_for('edit_patient_record', record_id=record.id) }}">
+                              <button class="btn-small">
+                                Edit
+                              </button>
+                            </a>
+
+                            <form method="POST" action="{{ url_for('delete_patient_record', record_id=record.id) }}" style="display:inline;">
+                                <button type="submit" class="btn-small1">Delete</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="record-content">
+                        {% if record.medical_history %}
+                            <p><strong>Medical History & Diagnosis:</strong> {{ record.medical_history }}</p>
+                        {% endif %}
+
+                        {% if record.allergies %}
+                            <p><strong>Allergies:</strong> {{ record.allergies }}</p>
+                        {% endif %}
+
+                        {% if record.current_medications %}
+                            <p><strong>Prescription & Medications:</strong> {{ record.current_medications }}</p>
+                        {% endif %}
+
+                        {% if record.notes %}
+                            <p><strong>Clinical Notes:</strong> {{ record.notes }}</p>
+                        {% endif %}
+                    </div>
+
+                    <hr>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p>No medical history records found.</p>
+            {% endif %}
+        </div>
+    </div>
+      
+    <button onclick="window.print()" class="btn-primary print-btn">Print Records</button>
+
+    <a href="{{ url_for('doctor_appointments') }}">
+      <button class="btn-primary">
+        Back to Appointments
+      </button>
+    </a>
+</div>
+{% endblock %}

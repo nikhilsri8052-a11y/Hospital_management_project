@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Patient Login - CarePlus+{% endblock %}
+
+{% block content %}
+
+<div class="login">
+
+  <h3 style="text-align:center; margin-bottom:25px;">Login</h3>
+
+  {% if error %}
+    <div class="error-message" style="
+        background:#ffe5e5;
+        padding:12px 15px;
+        border-radius:10px;
+        color:#b30000;
+        margin-bottom:20px;
+        font-weight:600;">
+      {{ error }}
+    </div>
+  {% endif %}
+
+  <form action="{{ url_for('submit_patient_login') }}" method="post" class="form">
+
+    <label for="email">Email</label>
+    <input type="text" id="email" name="email" required>
+
+    <label for="password">Password</label>
+    <input type="password" id="password" name="password" required>
+
+    <button type="submit">Login</button>
+
+    <h5 style="margin-top:20px; text-align:center;">
+      Don't have an account? 
+      <a href="{{ url_for('register') }}">Register here</a>
+    </h5>
+
+  </form>
+
+</div>
+
+{% endblock %}

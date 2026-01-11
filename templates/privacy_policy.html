@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Privacy Policy - CarePlus+{% endblock %}
+{%block content %}
+<div class="topic">
+  <h1>Privacy Policy</h1>
+</div>
+<div class="privacy-container">
+  <div class="privacy-content">
+    <h2>Introduction</h2>
+    <p>At CarePlus+, we are committed to protecting your privacy. This Privacy Policy outlines how we collect, use, and safeguard your personal information when you visit our website or use our services.</p>
+  </div>
+  <div class="privacy-content">
+    <h2>Information We Collect</h2>
+    <ul>
+      <li><strong>Personal Information:</strong> Name, email address, phone number, and other contact details.</li>
+      <li><strong>Health Information:</strong> Medical history, treatment details, and other health-related data.</li>
+      <li><strong>Usage Data:</strong> Information about how you use our website and services.</li>
+    </ul>
+  </div>
+  <div class="privacy-content">
+    <h2>How We Use Your Information</h2>
+    <ul>
+      <li>To provide and manage healthcare services.</li>
+      <li>To communicate with you about appointments, treatments, and health tips.</li>
+      <li>To improve our website and services based on your feedback.</li>
+    </ul>
+  </div>
+  <div class="privacy-content">
+    <h2>Your Rights</h2>
+    <p>You have the right to access, correct, or delete your personal information. You can also opt-out of receiving marketing communications from us at any time.</p>
+  </div>
+  <div class="privacy-content">
+    <h2>Contact Us</h2>
+    <p>If you have any questions or concerns about this Privacy Policy, please contact us at <a href="{{ url_for('enquiry')}}">Contact Us</a>.</p>
+  </div>
+</div>
+{% endblock %}

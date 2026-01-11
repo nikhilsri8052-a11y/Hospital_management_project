@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="topic">
+  <h1>Manage Doctors</h1>
+</div>
+
+<table class="table">
+  <thead class="table-dark">
+    <tr>
+      <th>Sr.No</th>
+      <th>ID
+        <form method="get" action="{{ url_for('manage_doctors_page') }}" class="table-search-form">
+          <input type="text" name="search_id" placeholder="Search by ID..." value="{{ search_id }}">
+          <button type="submit">Search</button>
+        </form>
+      </th>
+      <th>Name
+        <form method="get" action="{{ url_for('manage_doctors_page') }}" class="table-search-form">
+          <input type="text" name="search" placeholder="Search doctors..." value="{{ search_name }}">
+          <button type="submit">Search</button>
+        </form>
+      </th>
+      <th>Specialization
+        <form method="get" action="{{ url_for('manage_doctors_page') }}">
+          <select name="specialization_id">
+            <option value="">All Specializations</option>
+            {% for s in spec_list %}
+              <option value="{{ s.id }}" {% if s.id|string == selected_spec|string %}selected{% endif %}>
+                {{ s.name }}
+              </option>
+            {% endfor %}
+          </select>
+          <button type="submit">Filter</button>
+        </form>
+      </th>
+      <th>Email</th>
+      <th>Action
+        <a href="{{ url_for('add_doctor') }}">
+          <button class="hero-btn2">Add New Doctor</button>
+        </a>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    {% set serial_number = namespace(value=0) %}
+    {% for doctor in doctors %}
+      {% if not doctor.blacklisted %}
+        {% set serial_number.value = serial_number.value + 1 %}
+        <tr>
+          <td>{{ serial_number.value }}</td>
+          <td>{{ doctor.id }}</td>
+          <td>{{ doctor.name }}</td>
+          <td>{{ doctor.specialization.name if doctor.specialization else '' }}</td>
+          <td>{{ doctor.email }}</td>
+          <td>
+            <a href="{{ url_for('edit_doctor', doctor_id=doctor.id) }}" class="edit-button">Edit</a>
+
+            <form action="{{ url_for('remove_doctor', doctor_id=doctor.id) }}" 
+                  method="POST" style="display:inline;"
+                  onsubmit="return confirm('Are you sure you want to remove this doctor?');">
+              <button type="submit" class="r-t">Remove</button>
+            </form>
+
+            <form action="{{ url_for('blacklist_doctor', doctor_id=doctor.id) }}" 
+                  method="POST" style="display:inline;"
+                  onsubmit="return confirm('Blacklist this doctor?');">
+              <button type="submit" class="bl-t">Blacklist</button>
+            </form>
+          </td>
+        </tr>
+      {% endif %}
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

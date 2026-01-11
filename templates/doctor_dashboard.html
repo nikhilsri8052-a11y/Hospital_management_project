@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Doctor Dashboard{% endblock %}
+
+{% block content %}
+<div class="topic">
+  <h1 style="text-align:center; margin-top:30px;">Doctor Dashboard</h1>
+</div>
+
+<div class="dashboard-options" style="text-align:center; margin-top:50px;">
+
+  <a href="{{ url_for('doctor_appointments') }}">
+      <button class="dashboard-button">My Appointments</button>
+  </a>
+  <a href="{{ url_for('doctor_ava', doctor_id=doctor.id) }}">
+    <button class="dashboard-button">Manage Time Slots</button>
+  </a>
+  <a href="{{ url_for('doctor_patients', doctor_id=doctor.id) }}">
+    <button class="dashboard-button">My Patients</button>
+  </a>
+  <a href="{{ url_for('doctor_myAcc') }}">
+    <button class="dashboard-button">My Profile</button>
+  </a>
+</div>
+{% endblock %}

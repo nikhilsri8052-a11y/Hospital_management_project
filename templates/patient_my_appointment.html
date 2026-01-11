@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="appointment-form">
+    <h2>My Appointments</h2>
+    
+    {% if appointments %}
+        <table class="appointment-table">
+            <thead>
+                <tr>
+                    <th>Doctor</th>
+                    <th>Specialization</th>
+                    <th>Date</th>
+                    <th>Time Slot</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for appointment in appointments %}
+                <tr>
+                    <td>{{ appointment.doctor.name }}</td>
+                    <td>{{ appointment.doctor.specialization.name }}</td>
+                    <td>{{ appointment.appointment_date.strftime('%Y-%m-%d') }}</td>
+                    <td>
+                        {{ appointment.slot.start_time.strftime('%I:%M %p') }} - 
+                        {{ appointment.slot.end_time.strftime('%I:%M %p') }}
+                    </td>
+                    <td class="status-{{ appointment.status|lower }}">{{ appointment.status }}</td>
+                    <td>
+                        <div class="action-buttons">
+                            {% if appointment.status in ['Pending', 'Confirmed'] %}
+                            <form method="POST" action="{{ url_for('Preschedule_appointment', appointment_id=appointment.id) }}" class="inline-form">
+                                <select name="new_slot_id" required>
+                                    <option value="">New Slot</option>
+                                    {% for slot in available_slots %}
+                                        {% if slot.doctor_id == appointment.doctor_id %}
+                                        <option value="{{ slot.id }}">
+                                            {{ slot.date.strftime('%Y-%m-%d') }} - 
+                                            {{ slot.start_time.strftime('%I:%M %p') }} to {{ slot.end_time.strftime('%I:%M %p') }}
+                                        </option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                                <button type="submit" class="btn-reschedule">Reschedule</button>
+                            </form>
+                            {% endif %}
+                            
+                            <form method="POST" action="{{ url_for('cancel_appointment', appointment_id=appointment.id) }}" style="display: inline;">
+                                <button type="submit" class="btn-cancel" onclick="return confirm('Are you sure you want to cancel this appointment?')">
+                                    Cancel/Delete
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>You have no appointments scheduled.</p>
+        <div class="book-btn-container">
+            <a href="{{ url_for('our_doctors') }}" class="book-btn">
+                Book Your First Appointment
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

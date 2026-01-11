@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="topic">
+    <h2>My Appointments</h2>
+</div>
+<div class="search-section">
+    <form method="GET" action="{{ url_for('doctor_appointments') }}" class="search-form">
+        <div class="search-fields">
+            <input type="text" name="search_name" placeholder="Search by patient name" value="{{ request.args.get('search_name', '') }}">
+            <select name="new_slot_id" required>
+                <option value="">Search by time</option>
+                {% for slot in available_slots %}
+                    {% set slot_value = slot.date|string + "|" + slot.slot_name %}
+                    <option value="{{ slot_value }}"
+                        {% if request.args.get('new_slot_id') == slot_value %}selected{% endif %}>
+                        {{ slot.date }} | {{ slot.slot_name }}
+                    </option>
+                {% endfor %}
+            </select>
+            <button type="submit" class="btn-search">Search</button>
+        </div>
+    </form>
+</div>
+
+<div class="appointments-container">
+    <div class="appointment-form">
+        <h3 style="text-align:center; margin-bottom:25px;">Pending Appointments</h3>
+        
+        {% if pending_appointments %}
+            <table class="appointment-table">
+                <thead>
+                    <tr>
+                        <th>Patient</th>
+                        <th>Date</th>
+                        <th>Time Slot</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for appointment in pending_appointments %}
+                    <tr>
+                        <td>
+                            {{ appointment.patient.name }}
+                            <br>
+                            <small>Email: {{ appointment.patient.email }}</small>
+                            <br>
+                            <small>Phone: {{ appointment.patient.phone }}</small>
+                        </td>
+                        <td>{{ appointment.appointment_date.strftime('%Y-%m-%d') }}</td>
+                        <td>
+                            {% set start_hour = appointment.slot.start_time.hour %}
+                            {% if start_hour < 12 %}
+                                Morning
+                            {% else %}
+                                Evening
+                            {% endif %}
+                        </td>
+                        <td class="status-{{ appointment.status|lower }}">{{ appointment.status }}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <form method="POST" action="{{ url_for('update_appointment_status', appointment_id=appointment.id) }}" class="inline-form">
+                                    <select name="status" onchange="this.form.submit()">
+                                        <option value="Pending" {% if appointment.status == 'Pending' %}selected{% endif %}>Pending</option>
+                                        <option value="Confirmed" {% if appointment.status == 'Confirmed' %}selected{% endif %}>Confirmed</option>
+                                        <option value="Completed" {% if appointment.status == 'Completed' %}selected{% endif %}>Completed</option>
+                                    </select>
+                                </form>
+                                
+                                <form method="POST" action="{{ url_for('reschedule_appointment', appointment_id=appointment.id) }}" class="inline-form">
+                                    <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 8px;">
+                                        <select name="new_slot_id" required>
+                                            <option value="">New Slot</option>
+                                            {% for slot in available_slots %}
+                                                <option value="{{ slot.id }}">
+                                                    {{ slot.date.strftime('%Y-%m-%d') }} - 
+                                                    {% set start_hour = slot.start_time.hour %}
+                                                    {% if start_hour < 12 %}
+                                                        Morning
+                                                    {% else %}
+                                                        Evening
+                                                    {% endif %}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                        <button type="submit" class="btn-reschedule">Confirm</button>
+                                    </div>
+                                </form>
+                                
+                                <a href="{{ url_for('view_patient_history', patient_id=appointment.patient.id) }}" class="btn-history">
+                                    View History
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No pending appointments.</p>
+        {% endif %}
+    </div>
+    <div class="appointment-form">
+        <h3 style="text-align:center; margin-bottom:25px;">Confirmed Upcoming Appointments</h3>
+        
+        {% if upcoming_appointments %}
+            <table class="appointment-table">
+                <thead>
+                    <tr>
+                        <th>Patient</th>
+                        <th>Date</th>
+                        <th>Time Slot</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for appointment in upcoming_appointments %}
+                    <tr>
+                        <td>
+                            {{ appointment.patient.name }}
+                            <br>
+                            <small>Email: {{ appointment.patient.email }}</small>
+                            <br>
+                            <small>Phone: {{ appointment.patient.phone }}</small>
+                        </td>
+                        <td>{{ appointment.appointment_date.strftime('%Y-%m-%d') }}</td>
+                        <td>
+                            {% set start_hour = appointment.slot.start_time.hour %}
+                            {% if start_hour < 12 %}
+                                Morning
+                            {% else %}
+                                Evening
+                            {% endif %}
+                        </td>
+                        <td class="status-{{ appointment.status|lower }}">{{ appointment.status }}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <form method="POST" action="{{ url_for('update_appointment_status', appointment_id=appointment.id) }}" class="inline-form">
+                                    <select name="status" onchange="this.form.submit()">
+                                        <option value="Pending" {% if appointment.status == 'Pending' %}selected{% endif %}>Pending</option>
+                                        <option value="Confirmed" {% if appointment.status == 'Confirmed' %}selected{% endif %}>Confirmed</option>
+                                        <option value="Completed" {% if appointment.status == 'Completed' %}selected{% endif %}>Completed</option>
+                                    </select>
+                                </form>
+                                
+                                <form method="POST" action="{{ url_for('reschedule_appointment', appointment_id=appointment.id) }}" class="inline-form">
+                                    <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 8px;">
+                                        <select name="new_slot_id" required>
+                                            <option value="">New Slot</option>
+                                            {% for slot in available_slots %}
+                                                <option value="{{ slot.id }}">
+                                                    {{ slot.date.strftime('%Y-%m-%d') }} - 
+                                                    {% set start_hour = slot.start_time.hour %}
+                                                    {% if start_hour < 12 %}
+                                                        Morning
+                                                    {% else %}
+                                                        Evening
+                                                    {% endif %}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                        <button type="submit" class="btn-reschedule">Confirm</button>
+                                    </div>
+                                </form>
+                                
+                                <a href="{{ url_for('view_patient_history', patient_id=appointment.patient.id) }}" class="btn-history">
+                                    View History
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No confirmed upcoming appointments.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

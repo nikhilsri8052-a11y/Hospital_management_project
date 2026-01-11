@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Admin Login - CarePlus+{% endblock %}
+
+{% block content %}
+
+<div class="login">
+
+  <h3 style="text-align:center; margin-bottom:25px;">Admin Login</h3>
+
+  {% if error %}
+    <div class="error-message" style="
+        background:#ffe5e5;
+        padding:12px 15px;
+        border-radius:10px;
+        color:#b30000;
+        margin-bottom:20px;
+        font-weight:600;">
+      {{ error }}
+    </div>
+  {% endif %}
+
+  <form action="{{ url_for('submit_admin_login') }}" method="post" class="form">
+
+    <label for="username">Username</label>
+    <input type="text" id="username" name="username" required>
+
+    <label for="password">Password</label>
+    <input type="password" id="password" name="password" required>
+
+    <button type="submit">Login</button>
+
+  </form>
+
+</div>
+
+{% endblock %}

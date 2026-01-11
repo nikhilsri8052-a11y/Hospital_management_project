@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="topic">
+  <h1 style="text-align:center; margin-top:30px;">Account</h1>
+</div>
+
+<div class="admin-account-container">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="flash-message {{ category }}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+  <h2 style="text-align:center; margin-bottom:20px;">Welcome, {{ admin.username }}</h2>
+  <div class="admin-actions">
+    <a href="{{ url_for('admin_change_pass') }}">
+      <button class="btn-primary">Change Password</button>
+    </a>
+    <a href="{{ url_for('logout') }}">
+      <button class="btn-secondary">Logout</button>
+    </a>
+  </div>
+</div>
+{% endblock %}

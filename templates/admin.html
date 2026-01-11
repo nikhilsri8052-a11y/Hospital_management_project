@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Login{% endblock %}
+
+{% block content %}
+<div class="topic">
+  <h1 style="text-align:center; margin-top:30px;">Admin Dashboard</h1>
+</div>
+
+<div class ="dashboard-options" style="text-align:center; margin-top:50px;">
+
+  <a href="{{ url_for('manage_doctors_page') }}">
+    <button class="dashboard-button">Manage Doctors</button>
+  </a>
+  <a href="{{ url_for('view_enquiries') }}">
+    <button class="dashboard-button">View Enquiries</button>
+  </a>
+  <a href="{{ url_for('admin_patient')}}">
+    <button class="dashboard-button">Patients</button>
+  </a>
+  <a href="{{ url_for('admin_view_appointments') }}">
+    <button class="dashboard-button">Appointments</button>
+  </a>
+  <a href="{{ url_for('admin_myAcc') }}">
+    <button class="dashboard-button">My Account</button>
+  </a>
+    <a href="{{ url_for('blacklisted_doctors') }}">
+    <button class="dashboard-button">Blacklist</button>
+  </a>
+</div>
+{% endblock %}

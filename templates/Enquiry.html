@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Enquiry- CarePlus+{% endblock %}
+{% block content %}
+<div class="topic">
+  <h1>Enquiry</h1>
+</div>
+<div class="form">
+  <form action="/submit_contact" method="post">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required>
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required>
+
+    <label for="message">Message:</label>
+    <textarea id="message" name="message" rows="4" required></textarea>
+
+    <button type="submit">Submit</button>
+  </form>
+</div>
+<div class="privacy-container">
+  <div class="privacy-content">
+    <h2>Get in Touch</h2>
+    <p>If you have any questions, concerns, or feedback, please feel free to reach out to us. We are here to assist you and provide the best possible care.</p>
+  </div>
+  <div class="privacy-content">
+    <h2>Contact Information</h2>
+    <ul>
+      <li><strong>Phone:</strong> +1 (555) 123-4567</li>
+      <li><strong>Email:</strong> info@careplus.com</li>
+      <li><strong>Address:</strong> 123 Health St., Wellness City, HC 45678</li>
+    </ul>
+  </div>
+</div>
+{% endblock %}

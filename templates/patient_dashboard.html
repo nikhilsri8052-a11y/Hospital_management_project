@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="topic">
+  <h1 style="text-align:center; margin-top:30px;">Welcome, {{ patient.name }} </h1>
+</div>
+<div class ="dashboard-options" style="text-align:center; margin-top:50px;">
+
+  <a href="{{ url_for('patient_my_appointment') }}">
+    <button class="dashboard-button">My Appointments</button>
+  </a>
+  <a href="{{ url_for('services') }}">
+    <button class="dashboard-button">Book Appointment/View Departments</button>
+  </a>
+  <a href="{{ url_for('patient_history_for_patient', patient_id=patient.id) }}">
+    <button class="dashboard-button">View Medical History</button>
+  </a>
+  <a href="{{ url_for('patient_myAcc', patient_id=patient.id) }}">
+      <button class="dashboard-button">My Profile</button>
+  </a>
+</div>
+{% endblock %}

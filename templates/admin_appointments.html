@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="topic">
+  <h1 style="text-align:center; margin-top:30px;">All Appointments</h1>
+</div>
+
+<div class="table-container">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Appointment ID
+          <form method="get" action="{{ url_for('admin_view_appointments') }}" class="table-search-form">
+            <input type="text" name="search_id" placeholder="Search by ID..." value="{{ search_id }}">
+            <button type="submit">Search</button>
+          </form>
+        </th>
+        <th>Patient Name
+          <form method="get" action="{{ url_for('admin_view_appointments') }}" class="table-search-form">
+            <input type="text" name="search_patient" placeholder="Search patient..." value="{{ search_patient }}">
+            <button type="submit">Search</button>
+          </form>
+        </th>
+        <th>Doctor Name
+          <form method="get" action="{{ url_for('admin_view_appointments') }}" class="table-search-form">
+            <input type="text" name="search_doctor" placeholder="Search doctor..." value="{{ search_doctor }}">
+            <button type="submit">Search</button>
+          </form>
+        </th>
+        <th>Slot Time</th>
+        <th>Status
+          <form method="get" action="{{ url_for('admin_view_appointments') }}" class="table-search-form">
+            <select name="status_filter">
+              <option value="">All Status</option>
+              <option value="Pending" {% if status_filter == 'Pending' %}selected{% endif %}>Pending</option>
+              <option value="Confirmed" {% if status_filter == 'Confirmed' %}selected{% endif %}>Confirmed</option>
+              <option value="Completed" {% if status_filter == 'Completed' %}selected{% endif %}>Completed</option>
+              <option value="Cancelled" {% if status_filter == 'Cancelled' %}selected{% endif %}>Cancelled</option>
+            </select>
+            <button type="submit">Filter</button>
+          </form>
+        </th>
+        <th>Action</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for appointment in appointments %}
+      <tr>
+        <td>{{ appointment.id }}</td>
+        <td>{{ appointment.patient.name }}</td>
+        <td>{{ appointment.doctor.name }}</td>
+        <td>{{ appointment.slot.start_time.strftime('%H:%M') }} - {{ appointment.slot.end_time.strftime('%H:%M') }}</td>
+        <td>{{ appointment.status }}</td>
+
+        <td>
+          <form method="POST" action="{{ url_for('admin_cancel_appointment', appointment_id=appointment.id) }}" style="display:inline;">
+            <button type="submit" class="btn-cancel" onclick="return confirm('Are you sure you want to cancel this appointment?')">
+              Cancel
+            </button>
+          </form>
+          <a href="{{ url_for('admin_view_patient', patient_id=appointment.patient.id) }}">
+            <button class="b-t">View Details</button>
+          </a>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="6" style="text-align: center; padding: 20px;">
+          No appointments found matching your search criteria.
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

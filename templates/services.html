@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Our Specializations - CarePlus+{% endblock %}
+
+{% block content %}
+<div class="topic">
+    <h1>Our Medical Specializations</h1>
+    <p>Providing expert care across a wide spectrum of health disciplines for you and your family.</p>
+    <hr>
+</div>
+<div class="services-grid">
+    {% for spec in specializations %}
+        <div class="service-card">
+            <div class="card-icon-wrapper">
+                <i class="fas fa-hospital"></i>
+            </div>
+            <h2>{{ spec.name }}</h2>
+            <p>{{ spec.about }}</p>
+            <a href="{{ url_for('department', specialization_id=spec.id ) }}" class="view-button">View</a> 
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="topic">
+    <h1>Book Appointment with {{ doctor.name }}</h1>
+</div>
+
+<div class="appointment-form">
+    <h2>Available Time Slots</h2>
+    
+    {% if schedule %}
+        {% for day in schedule %}
+        <div class="date-section">
+            <h3>{{ day.date.strftime('%A, %B %d, %Y') }}</h3>
+            
+            <form method="POST">
+                <input type="hidden" name="date" value="{{ day.date.strftime('%Y-%m-%d') }}">
+                
+                {% for slot_name in ['Morning', 'Evening'] %}
+                <div class="slot-option">
+                    {% if day[slot_name].status == 'Available' %}
+                        <input type="radio" name="slot_id" value="{{ day[slot_name].slot_id }}" id="{{ slot_name|lower }}_{{ day.date.strftime('%Y-%m-%d') }}" required>
+                        <label for="{{ slot_name|lower }}_{{ day.date.strftime('%Y-%m-%d') }}">
+                            <strong>{{ slot_name }} Slot:</strong> 
+                            {{ day[slot_name].start_time.strftime('%I:%M %p') }} - {{ day[slot_name].end_time.strftime('%I:%M %p') }}
+                            <span class="available-badge">Available</span>
+                        </label>
+                    {% else %}
+                        <div class="slot-unavailable">
+                            <strong>{{ slot_name }} Slot:</strong> 
+                            {{ day[slot_name].start_time.strftime('%I:%M %p') }} - {{ day[slot_name].end_time.strftime('%I:%M %p') }} - 
+                            <span class="status-badge status-{{ day[slot_name].status|lower }}">
+                                {% if day[slot_name].status == 'Unavailable' %}
+                                    Not Available
+                                {% elif day[slot_name].status == 'Full' %}
+                                    Fully Booked
+                                {% elif day[slot_name].status == 'Closing' %}
+                                    Closing Soon
+                                {% else %}
+                                    {{ day[slot_name].status }}
+                                {% endif %}
+                            </span>
+                        </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+                
+                {% if day.Morning.status == 'Available' or day.Evening.status == 'Available' %}
+                <a href="{{ url_for('patient_my_appointment') }}">
+                    <button type="submit" class="btn btn-primary">
+                        Book Appointment for {{ day.date.strftime('%b %d') }}
+                    </button>
+                </a>
+                {% else %}
+                <button type="button" class="btn btn-secondary" disabled>
+                    No slots available
+                </button>
+                {% endif %}
+            </form>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p>No available slots found for the next 7 days.</p>
+    {% endif %}
+</div>
+
+{% endblock %}

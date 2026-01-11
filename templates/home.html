@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Home-CarePlus+{% endblock %}
+{% block content %}
+
+<section class="hero">
+    <div class="hero-content">
+        <h1>Welcome</h1>
+        <p>Compassionate Care. Advanced Medicine.</p>
+        <div>
+            <a href="{{ url_for('services') }}">
+              <button class="hero-btn1">Book an Appointment</button>
+            </a>
+            <a href="{{ url_for('enquiry') }}">
+              <button class="hero-btn2">Contact us Today</button>
+            </a>
+        </div>
+    </div>
+</section>
+
+<div class="why">
+    <h2>Why Choose CarePlus+?</h2>
+    <div class="why-list">
+        <div class="why-list-item">Experienced Medical Professionals</div>
+        <div class="why-list-item">State-of-the-Art Facilities</div>
+        <div class="why-list-item">Comprehensive Healthcare Services</div>
+        <div class="why-list-item">Patient-Centered Approach</div>
+    </div>
+</div>
+
+{% endblock %}

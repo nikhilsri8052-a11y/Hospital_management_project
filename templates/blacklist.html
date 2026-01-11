@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="topic">
+  <h1>Blacklist</h1>
+</div>
+
+<div class="appointments-container">
+  <div class="appointment-form">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+      <h3 style="text-align:center;">Blacklisted Patients</h3>
+      <form method="get" action="{{ url_for('blacklisted_doctors') }}" class="search-form" style="display: flex; gap: 10px;">
+        <input type="text" name="search_patient" placeholder="Search by patient name..." 
+               value="{{ request.args.get('search_patient', '') }}" style="padding: 5px;">
+        <button type="submit" style="padding: 5px 10px;">Search</button>
+        {% if request.args.get('search_patient') %}
+          <a href="{{ url_for('blacklisted_doctors') }}" style="padding: 5px 10px; background: #ccc; color: black; text-decoration: none; border-radius: 3px;">Clear</a>
+        {% endif %}
+      </form>
+    </div>
+
+    {% if bp|length == 0 %}
+      <p style="text-align:center; font-weight:bold; margin-top:20px;">
+        No blacklisted patients found.
+      </p>
+    {% else %}
+    <table class="appointment-table">
+      <thead>
+        <tr>
+          <th>Patient ID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Date Blacklisted</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for patient in bp %}
+        <tr>
+          <td>{{ patient.id }}</td>
+          <td>{{ patient.name }}</td>
+          <td>{{ patient.email }}</td>
+          <td>{{ patient.date_blacklisted.strftime('%Y-%m-%d') }}</td>
+          <td>
+            <form action="{{ url_for('revoke_patient_blacklist', bid=patient.id) }}" method="post" style="display:inline;">
+              <button class="edit-button" onclick="return confirm('Revoke blacklist for this patient?')">
+                Revoke Blacklist
+              </button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
+  </div>
+  
+  <div class="appointment-form">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+      <h3 style="text-align:center;">Blacklisted Doctors</h3>
+      <form method="get" action="{{ url_for('blacklisted_doctors') }}" class="search-form" style="display: flex; gap: 10px;">
+        <input type="text" name="search_doctor" placeholder="Search by doctor name..." 
+               value="{{ request.args.get('search_doctor', '') }}" style="padding: 5px;">
+        <button type="submit" style="padding: 5px 10px;">Search</button>
+        {% if request.args.get('search_doctor') %}
+          <a href="{{ url_for('blacklisted_doctors') }}" style="padding: 5px 10px; background: #ccc; color: black; text-decoration: none; border-radius: 3px;">Clear</a>
+        {% endif %}
+      </form>
+    </div>
+
+    {% if blacklisted_info|length == 0 %}
+      <p style="text-align:center; font-weight:bold; margin-top:20px;">
+        No blacklisted doctors found.
+      </p>
+    {% else %}
+    <table class="appointment-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Reason</th>
+          <th>Date Blacklisted</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for doc, reason, date_blacklisted in blacklisted_info %}
+        <tr>
+          <td>{{ doc.id }}</td>
+          <td>{{ doc.name }}</td>
+          <td>{{ reason }}</td>
+          <td>{{ date_blacklisted.strftime('%Y-%m-%d') }}</td>
+          <td>
+            <form action="{{ url_for('remove_doctor', doctor_id=doc.id) }}" method="post" style="display:inline;">
+              <button class="r-t" onclick="return confirm('Permanently remove this doctor? This action cannot be undone.')">
+                Remove Doctor
+              </button>
+            </form>
+            <form action="{{ url_for('revoke_blacklist', doctor_id=doc.id) }}" method="post" style="display:inline;">
+              <button class="edit-button" onclick="return confirm('Remove from blacklist?')">
+                Revoke Blacklist
+              </button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

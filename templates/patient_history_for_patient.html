@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="topic">
+  <h1 style="text-align:center; margin-top:30px;">My History</h1>
+</div>
+
+<div class="privacy-container">
+  {% if history_records %}
+  <div class="record-box">
+      <h3>Medical Records History</h3>
+
+      {% for record in history_records %}
+      <div class="history-record">
+          <div class="record-header">
+              <strong>Record Date: {{ record.date_recorded.strftime('%Y-%m-%d %I:%M %p') }}</strong>
+          </div>
+          <div class="record-content">
+              {% if record.medical_history %}
+                  <p><strong>Medical History & Diagnosis:</strong> {{ record.medical_history }}</p>
+              {% endif %}
+
+              {% if record.allergies %}
+                  <p><strong>Allergies:</strong> {{ record.allergies }}</p>
+              {% endif %}
+
+              {% if record.current_medications %}
+                  <p><strong>Prescription & Medications:</strong> {{ record.current_medications }}</p>
+              {% endif %}
+
+              {% if record.notes %}
+                  <p><strong>Clinical Notes:</strong> {{ record.notes }}</p>
+              {% endif %}
+          </div>
+
+          <hr>
+      </div>
+      {% endfor %}
+  </div>
+  <button onclick="window.print()" class="btn-primary print-btn">Print Records</button>
+  {% else %}
+    <p style="text-align:center; margin-top:20px;">No medical history records found.</p>
+  {% endif %}
+</div>
+{% endblock %}

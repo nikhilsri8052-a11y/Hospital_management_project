@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="topic">
+  <h1 style="text-align:center; margin-top:30px;">All Patients</h1>
+</div>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Patient ID
+        <form method="get" action="{{ url_for('admin_patient') }}" class="table-search-form">
+          <input type="text" name="search_id" placeholder="Search by ID..." value="{{ search_id }}">
+          <button type="submit">Search</button>
+        </form>
+      </th>
+      <th>Name
+        <form method="get" action="{{ url_for('admin_patient') }}" class="table-search-form">
+          <input type="text" name="search_name" placeholder="Search by name..." value="{{ search_name }}">
+          <button type="submit">Search</button>
+        </form>
+      </th>
+      <th>Email
+        <form method="get" action="{{ url_for('admin_patient') }}" class="table-search-form">
+          <input type="text" name="search_email" placeholder="Search by email..." value="{{ search_email }}">
+          <button type="submit">Search</button>
+        </form>
+      </th>
+      <th>Phone
+        <form method="get" action="{{ url_for('admin_patient') }}" class="table-search-form">
+          <input type="text" name="search_phone" placeholder="Search by phone..." value="{{ search_phone }}">
+          <button type="submit">Search</button>
+        </form>
+      </th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for patient in patients %}
+    <tr>
+      <td>{{ patient.id }}</td>
+      <td>{{ patient.name }}</td>
+      <td>{{ patient.email }}</td>
+      <td>{{ patient.phone }}</td>
+      <td>
+        <a href="{{ url_for('admin_view_patient', patient_id=patient.id) }}">
+          <button class="view-button">View Details</button>
+        </a>
+        <form action="{{ url_for('blacklist_patient', patient_id=patient.id) }}"
+              method="post" style="display:inline;">
+          <button class="bl-t"
+                  onclick="return confirm('WARNING: This will permanently delete ALL patient data including appointments, medical records, and history. The patient will be blacklisted. Continue?')">
+              Blacklist
+          </button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

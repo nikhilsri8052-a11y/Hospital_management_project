@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="login">
+  <h3 style="text-align:center; margin-bottom:25px;">Register</h3>
+  <div class="form">
+    <form action="{{ url_for('submit_registration') }}" method="post">
+
+      <label for="name">Name</label>
+      <input type="text" id="name" name="name" required>
+
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" required>
+
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" required>
+
+      <label for="phone">Phone</label>
+      <input type="text" id="phone" name="phone" required>
+
+      <label for="age">Age</label>
+      <input type="number" id="age" name="age" required>
+
+      <label for="gender">Gender</label>
+      <select id="gender" name="gender" required>
+        <option value="">Select Gender</option>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+        <option value="other">Other</option>
+      </select>
+
+      <label for="dob">Date of Birth</label>
+      <input type="date" id="dob" name="dob">
+
+      <label for="address">Address</label>
+      <textarea id="address" name="address" rows="3"></textarea>
+
+      <label for="blood_group">Blood Group</label>
+      <select id="blood_group" name="blood_group">
+        <option value="">Select Blood Group</option>
+        <option value="A+">A+</option>
+        <option value="A-">A-</option>
+        <option value="B+">B+</option>
+        <option value="B-">B-</option>
+        <option value="AB+">AB+</option>
+        <option value="AB-">AB-</option>
+        <option value="O+">O+</option>
+        <option value="O-">O-</option>
+      </select>
+
+      <label for="emergency_contact_name">Emergency Contact Name</label>
+      <input type="text" id="emergency_contact_name" name="emergency_contact_name">
+
+      <label for="emergency_contact_phone">Emergency Contact Phone</label>
+      <input type="text" id="emergency_contact_phone" name="emergency_contact_phone">
+
+      <button type="submit">Register</button>
+    </form>
+
+    <h5>
+      Already have an account? <a href="{{ url_for('patient_login') }}">Login here</a>
+    </h5>
+  </div>
+</div>
+{% endblock %}

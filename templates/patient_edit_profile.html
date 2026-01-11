@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="topic">
+  <h1>Edit Profile</h1>
+</div>
+
+<!-- Flash Messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="flash-message {{ category }}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+<div class="form">
+  <form action="{{ url_for('update_profile') }}" method="post">
+    
+    <div class="form-grid">
+      <!-- Personal Information -->
+      <div class="form-group">
+        <label for="name">Full Name:</label>
+        <input type="text" id="name" name="name" value="{{ patient.name }}" required>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" value="{{ patient.email }}" required>
+      </div>
+
+      <div class="form-group">
+        <label for="phone">Phone Number:</label>
+        <input type="tel" id="phone" name="phone" value="{{ patient.phone }}" required>
+      </div>
+
+      <div class="form-group">
+        <label for="age">Age:</label>
+        <input type="number" id="age" name="age" value="{{ patient.age }}" min="0" max="150">
+      </div>
+
+      <div class="form-group">
+        <label for="gender">Gender:</label>
+        <select id="gender" name="gender">
+          <option value="">Select Gender</option>
+          <option value="Male" {% if patient.gender == 'Male' %}selected{% endif %}>Male</option>
+          <option value="Female" {% if patient.gender == 'Female' %}selected{% endif %}>Female</option>
+          <option value="Other" {% if patient.gender == 'Other' %}selected{% endif %}>Other</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="dob">Date of Birth:</label>
+        <input type="date" id="dob" name="dob" value="{{ patient.dob.strftime('%Y-%m-%d') if patient.dob else '' }}">
+      </div>
+
+      <div class="form-group">
+        <label for="blood_group">Blood Group:</label>
+        <select id="blood_group" name="blood_group">
+          <option value="">Select Blood Group</option>
+          <option value="A+" {% if patient.blood_group == 'A+' %}selected{% endif %}>A+</option>
+          <option value="A-" {% if patient.blood_group == 'A-' %}selected{% endif %}>A-</option>
+          <option value="B+" {% if patient.blood_group == 'B+' %}selected{% endif %}>B+</option>
+          <option value="B-" {% if patient.blood_group == 'B-' %}selected{% endif %}>B-</option>
+          <option value="AB+" {% if patient.blood_group == 'AB+' %}selected{% endif %}>AB+</option>
+          <option value="AB-" {% if patient.blood_group == 'AB-' %}selected{% endif %}>AB-</option>
+          <option value="O+" {% if patient.blood_group == 'O+' %}selected{% endif %}>O+</option>
+          <option value="O-" {% if patient.blood_group == 'O-' %}selected{% endif %}>O-</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Address -->
+    <div class="form-group full-width">
+      <label for="address">Address:</label>
+      <textarea id="address" name="address" rows="3" placeholder="Enter your full address">{{ patient.address or '' }}</textarea>
+    </div>
+
+    <!-- Emergency Contact -->
+    <h3 style="margin-top: 30px; margin-bottom: 20px; color: #2c3e50;">Emergency Contact Information</h3>
+    
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="emergency_contact_name">Emergency Contact Name:</label>
+        <input type="text" id="emergency_contact_name" name="emergency_contact_name" value="{{ patient.emergency_contact_name or '' }}" placeholder="Full name of emergency contact">
+      </div>
+
+      <div class="form-group">
+        <label for="emergency_contact_phone">Emergency Contact Phone:</label>
+        <input type="tel" id="emergency_contact_phone" name="emergency_contact_phone" value="{{ patient.emergency_contact_phone or '' }}" placeholder="Phone number of emergency contact">
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn-primary">Update Profile</button>
+      <a href="{{ url_for('patient_myAcc') }}">
+        <button type="button" class="btn-secondary">Cancel</button>
+      </a>
+    </div>
+  </form>
+</div>
+{% endblock %}

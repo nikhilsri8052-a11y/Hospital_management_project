@@ -1,0 +1,259 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="topic">
+    <h1>Manage My Availability</h1>
+</div>
+
+<div class="availability-container">
+
+    <form method="POST" class="availability-form">
+        {% for slot in slots %}
+        <div class="day-block">
+            <div class="day-header">
+                <h3>{{ slot.date.strftime('%A, %B %d, %Y') }}</h3>
+                <span class="day-status">
+                    {% if slot.morning.status == 'Available' or slot.evening.status == 'Available' %}
+                        <span class="status-available">● Available</span>
+                    {% else %}
+                        <span class="status-unavailable">● Unavailable</span>
+                    {% endif %}
+                </span>
+            </div>
+
+            <div class="slot-row {% if slot.morning.current_patients > 0 %}has-appointments{% endif %}">
+                <div class="slot-info">
+                    <label><strong>Morning Slot</strong></label>
+                    <span class="slot-time">8:00 AM - 12:00 PM</span>
+                    <span class="appointment-count">
+                        ({{ slot.morning.current_patients }}/{{ slot.morning.max_patients }} appointments)
+                    </span>
+                </div>
+                
+                <div class="slot-controls">
+                    <select name="morning_{{ slot.date.strftime('%Y-%m-%d') }}" 
+                            class="slot-select {% if slot.morning.current_patients > 0 %}disabled-select{% endif %}"
+                            {% if slot.morning.current_patients > 0 %}disabled{% endif %}>
+                        <option value="Available" 
+                            {% if slot.morning.status == 'Available' %}selected{% endif %}>
+                            Available
+                        </option>
+                        <option value="Unavailable"
+                            {% if slot.morning.status == 'Unavailable' or slot.morning.status == 'Closing' %}selected{% endif %}>
+                            Unavailable
+                        </option>
+                    </select>
+                    
+                    {% if slot.morning.current_patients > 0 %}
+                    <div class="slot-notice">
+                        <span class="locked">{{ slot.morning.current_patients }} appointment(s) - Cannot modify</span>
+                        {% if slot.morning.status == 'Closing' %}
+                        <span class="closing-notice">(Will close after current appointments)</span>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="slot-row {% if slot.evening.current_patients > 0 %}has-appointments{% endif %}">
+                <div class="slot-info">
+                    <label><strong>Evening Slot</strong></label>
+                    <span class="slot-time">6:00 PM - 9:00 PM</span>
+                    <span class="appointment-count">
+                        ({{ slot.evening.current_patients }}/{{ slot.evening.max_patients }} appointments)
+                    </span>
+                </div>
+                
+                <div class="slot-controls">
+                    <select name="evening_{{ slot.date.strftime('%Y-%m-%d') }}"
+                            class="slot-select {% if slot.evening.current_patients > 0 %}disabled-select{% endif %}"
+                            {% if slot.evening.current_patients > 0 %}disabled{% endif %}>
+                        <option value="Available"
+                            {% if slot.evening.status == 'Available' %}selected{% endif %}>
+                            Available
+                        </option>
+                        <option value="Unavailable"
+                            {% if slot.evening.status == 'Unavailable' %}selected{% endif %}>
+                            Unavailable
+                        </option>
+                    </select>
+                    
+                    {% if slot.evening.current_patients > 0 %}
+                    <div class="slot-notice">
+                        <span class="locked">{{ slot.evening.current_patients }} appointment(s) - Cannot modify</span>
+                        {% if slot.evening.status == 'Closing' %}
+                        <span class="closing-notice">(Will close after current appointments)</span>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+        <div>
+            <button type="submit" class="btn-primary print-btn">Save All Changes</button>
+        </div>
+    </form>
+</div>
+
+<style>
+.availability-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.availability-info {
+    margin-bottom: 30px;
+}
+
+.info-box {
+    background: #f8f9fa;
+    border-left: 4px solid #007bff;
+    padding: 15px;
+    border-radius: 4px;
+}
+
+.info-box h3 {
+    margin-top: 0;
+    color: #007bff;
+}
+
+.info-box ul {
+    margin-bottom: 0;
+    padding-left: 20px;
+}
+
+.day-block {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    background: white;
+}
+
+.day-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.day-header h3 {
+    margin: 0;
+    color: #333;
+}
+
+.status-available {
+    color: #28a745;
+    font-weight: bold;
+}
+
+.status-unavailable {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+.slot-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    background: #f8f9fa;
+}
+
+.slot-row.has-appointments {
+    background: #fff3cd;
+    border-left: 4px solid #ffc107;
+}
+
+.slot-info {
+    flex: 1;
+}
+
+.slot-info label {
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.slot-time {
+    color: #666;
+    font-size: 0.9em;
+}
+
+.appointment-count {
+    color: #6c757d;
+    font-size: 0.85em;
+}
+
+.slot-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.slot-select {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: white;
+}
+
+.disabled-select {
+    background-color: #e9ecef;
+    opacity: 0.6;
+}
+
+.slot-notice {
+    text-align: right;
+}
+
+.locked {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+.closing-notice {
+    color: #856404;
+    font-size: 0.85em;
+    display: block;
+    margin-top: 5px;
+}
+
+.form-actions {
+    text-align: center;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #ddd;
+}
+
+.btn-large {
+    padding: 12px 30px;
+    font-size: 1.1em;
+}
+
+.alert {
+    padding: 12px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+.alert-success {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.alert-error {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+</style>
+{% endblock %}

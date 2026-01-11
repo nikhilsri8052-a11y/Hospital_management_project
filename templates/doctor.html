@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="topic">
+    <h1>Meet Our Dedicated Physicians</h1>
+    <p>Expertise and compassionate care are at the heart of our practice. Learn more about the professionals who will be caring for you.</p>
+    <hr>
+</div>
+
+<form method="get" action="{{ url_for('our_doctors') }}" class="search-form">
+    <input type="text" name="search" placeholder="Search doctors...">
+
+    <select name="specialization_id">
+        <option value="">All Specializations</option>
+        {% for spec in specializations %}
+            <option value="{{ spec.id }}" {% if spec.id|string == selected_spec %}selected{% endif %}>
+                {{ spec.name }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <button type="submit">Search</button>
+</form>
+
+
+<div class="doctors-grid">
+    
+    {% for doctor in doctors %}
+    <div class="doctor-card">
+        <div class="profile-photo-wrapper">
+            <img src="{{ url_for('static', filename='images/default.png') }}">
+        </div>
+        
+        <div class="doctor-info">
+            <h2 class="doctor-name">{{ doctor.name }}</h2>
+            <h3 class="doctor-specialty">{{ doctor.specialization.name }}</h3>
+            <h3 class="doctor-experience">{{ doctor.experience }} years of experience</h3>
+            <h4 class="doctor-education">Education: {{ doctor.education }}</h4>
+            <h5 class="doctor-email">Contact: {{ doctor.email }}</h5>
+            <a href="{{ url_for('show_book_appointment', doctor_id=doctor.id) }}" class="btn-view-profile">Book Appointment<i class="fas fa-arrow-right"></i></a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

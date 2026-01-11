@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="appointment-form">
+    <h2>Edit Medical Record</h2>
+    
+    <form method="POST">
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="medical_history">Medical History & Diagnosis</label>
+                <textarea id="medical_history" name="medical_history" rows="3" placeholder="Enter medical history, diagnosis, symptoms...">{{ record.medical_history or '' }}</textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="allergies">Allergies</label>
+                <textarea id="allergies" name="allergies" rows="2" placeholder="List any allergies...">{{ record.allergies or '' }}</textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="current_medications">Prescription & Medications</label>
+                <textarea id="current_medications" name="current_medications" rows="3" placeholder="Enter prescription details, medications, dosage...">{{ record.current_medications or '' }}</textarea>
+            </div>
+            
+            <div class="form-group full-width">
+                <label for="notes">Clinical Notes & Observations</label>
+                <textarea id="notes" name="notes" rows="3" placeholder="Additional clinical notes, observations, recommendations...">{{ record.notes or '' }}</textarea>
+            </div>
+        </div>
+        
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Update Record</button>
+            <a href="{{ url_for('view_patient_history', patient_id=record.patient.id) }}" class="Submit">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
