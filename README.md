@@ -102,78 +102,117 @@ The database is designed using **relational modeling** with clear one-to-many re
 
 ```mermaid
 erDiagram
-    SPECIALIZATION ||--o{ DOCTOR : "has"
-    DOCTOR ||--o{ DOCTOR_SLOT : "manages"
-    DOCTOR ||--o{ APPOINTMENT : "attends"
-    PATIENT ||--o{ PATIENT_HISTORY : "has"
-    PATIENT ||--o{ APPOINTMENT : "books"
-    DOCTOR_SLOT ||--o{ APPOINTMENT : "contains"
-
-    SPECIALIZATION {
+    Enquiry {
         int id PK
         string name
+        string email
+        string message
+    }
+
+    Admin {
+        int id PK
+        string username UK
+        string password
+    }
+
+    specialization {
+        int id PK
+        string name UK
         text about
     }
 
-    DOCTOR {
+    Doctor {
         int id PK
-        int specialization_id FK
         string name
-        string email
-        string username
+        int specialization_id FK
+        string email UK
+        string username UK
+        string password
         int experience
+        datetime added_on
+        string education
         boolean blacklisted
     }
 
-    PATIENT {
+    blacklist {
+        int id PK
+        string email UK
+        text reason
+        datetime date_blacklisted
+    }
+
+    Patient {
         int id PK
         string name
-        string email
+        string email UK
         string phone
+        int age
+        string gender
+        date dob
+        text address
         string blood_group
+        string emergency_contact_name
+        string emergency_contact_phone
+        datetime added_on
+        string password
     }
 
-    PATIENT_HISTORY {
+    PatientHistory {
         int id PK
         int patient_id FK
+        datetime date_recorded
         text medical_history
         text allergies
+        text current_medications
+        text notes
     }
 
-    DOCTOR_SLOT {
+    DoctorSlot {
         int id PK
         int doctor_id FK
         date date
+        string slot_name
         time start_time
+        time end_time
         int max_patients
+        int current_patients
         string status
     }
 
-    APPOINTMENT {
+    Appointment {
         int id PK
         int patient_id FK
         int doctor_id FK
         int slot_id FK
         date appointment_date
+        time appointment_time
         string status
+        datetime booked_on
     }
 
-    ENQUIRY {
+    BlacklistedPatient {
         int id PK
         string name
-        string email
-        text message
+        string email UK
+        string phone
+        text reason
+        datetime date_blacklisted
     }
 
-    ADMIN {
-        int id PK
-        string username
-    }
-
-    BLACKLIST {
-        int id PK
-        string email
-    }
+    specialization ||--o{ Doctor : "has many"
+    Doctor ||--o{ DoctorSlot : "creates"
+    Doctor ||--o{ Appointment : "has appointments"
+    Patient ||--o{ Appointment : "makes appointments"
+    Patient ||--o{ PatientHistory : "has history"
+    DoctorSlot ||--o{ Appointment : "contains"
+    Doctor }|--|| blacklist : "blacklisted via"
+    
+    %% Relationship details
+    Doctor }|--|| specialization : "belongs to specialization"
+    PatientHistory }|--|| Patient : "belongs to patient"
+    Appointment }|--|| DoctorSlot : "scheduled in slot"
+    Appointment }|--|| Doctor : "with doctor"
+    Appointment }|--|| Patient : "for patient"
 ```
 
 > ✅ **Note:** GitHub supports Mermaid diagrams. If it does not render, you can export this diagram as an image using Mermaid Live.
@@ -255,5 +294,6 @@ Student – IIT Madras
 This project was built as part of the **IIT Madras App Development coursework**, focusing on real‑world system design, authentication, and database modeling.
 
 If you like this project, consider giving it a ⭐ on GitHub!
+
 
 
