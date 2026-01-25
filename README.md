@@ -101,11 +101,6 @@ The database is designed using **relational modeling** with clear one-to-many re
 ### 📊 Entity Relationship (ER) Diagram
 
 ```mermaid
-To present an ER diagram directly in a GitHub README.md file, the best approach is using Mermaid.js syntax. GitHub renders this natively, so you don't need to upload any external image files.
-
-Copy and paste the following block into your Markdown file:
-
-Code snippet
 erDiagram
     SPECIALIZATION ||--o{ DOCTOR : "has"
     DOCTOR ||--o{ DOCTOR_SLOT : "manages"
@@ -260,4 +255,5 @@ Student – IIT Madras
 This project was built as part of the **IIT Madras App Development coursework**, focusing on real‑world system design, authentication, and database modeling.
 
 If you like this project, consider giving it a ⭐ on GitHub!
+
 
