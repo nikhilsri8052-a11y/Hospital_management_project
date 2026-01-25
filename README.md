@@ -101,130 +101,118 @@ The database is designed using **relational modeling** with clear one-to-many re
 ### 📊 Entity Relationship (ER) Diagram
 
 ```mermaid
-@startuml
-' Hide the spot
-hide circle
+erDiagram
+    Enquiry {
+        int id PK
+        string name
+        string email
+        string message
+    }
 
-' Avoid problems with angled crows feet
-skinparam linetype ortho
+    Admin {
+        int id PK
+        string username UK
+        string password
+    }
 
-entity "Enquiry" {
-  *id : integer <<PK>>
-  --
-  *name : string
-  *email : string
-  *message : text
-}
+    specialization {
+        int id PK
+        string name UK
+        text about
+    }
 
-entity "Admin" {
-  *id : integer <<PK>>
-  --
-  *username : string <<UK>>
-  *password : string
-}
+    Doctor {
+        int id PK
+        string name
+        int specialization_id FK
+        string email UK
+        string username UK
+        string password
+        int experience
+        datetime added_on
+        string education
+        boolean blacklisted
+    }
 
-entity "specialization" {
-  *id : integer <<PK>>
-  --
-  *name : string <<UK>>
-  *about : text
-}
+    blacklist {
+        int id PK
+        string email UK
+        text reason
+        datetime date_blacklisted
+    }
 
-entity "Doctor" {
-  *id : integer <<PK>>
-  --
-  *name : string
-  *specialization_id : integer <<FK>>
-  *email : string <<UK>>
-  *username : string <<UK>>
-  *password : string
-  experience : integer
-  added_on : datetime
-  education : string
-  blacklisted : boolean
-}
+    Patient {
+        int id PK
+        string name
+        string email UK
+        string phone
+        int age
+        string gender
+        date dob
+        text address
+        string blood_group
+        string emergency_contact_name
+        string emergency_contact_phone
+        datetime added_on
+        string password
+    }
 
-entity "blacklist" {
-  *id : integer <<PK>>
-  --
-  *email : string <<UK>>
-  *reason : text
-  date_blacklisted : datetime
-}
+    PatientHistory {
+        int id PK
+        int patient_id FK
+        datetime date_recorded
+        text medical_history
+        text allergies
+        text current_medications
+        text notes
+    }
 
-entity "Patient" {
-  *id : integer <<PK>>
-  --
-  *name : string
-  email : string <<UK>>
-  *phone : string
-  age : integer
-  gender : string
-  dob : date
-  address : text
-  blood_group : string
-  emergency_contact_name : string
-  emergency_contact_phone : string
-  added_on : datetime
-  *password : string
-}
+    DoctorSlot {
+        int id PK
+        int doctor_id FK
+        date date
+        string slot_name
+        time start_time
+        time end_time
+        int max_patients
+        int current_patients
+        string status
+    }
 
-entity "PatientHistory" {
-  *id : integer <<PK>>
-  --
-  *patient_id : integer <<FK>>
-  date_recorded : datetime
-  medical_history : text
-  allergies : text
-  current_medications : text
-  notes : text
-}
+    Appointment {
+        int id PK
+        int patient_id FK
+        int doctor_id FK
+        int slot_id FK
+        date appointment_date
+        time appointment_time
+        string status
+        datetime booked_on
+    }
 
-entity "DoctorSlot" {
-  *id : integer <<PK>>
-  --
-  *doctor_id : integer <<FK>>
-  *date : date
-  slot_name : string
-  *start_time : time
-  *end_time : time
-  max_patients : integer
-  current_patients : integer
-  status : string
-}
+    BlacklistedPatient {
+        int id PK
+        string name
+        string email UK
+        string phone
+        text reason
+        datetime date_blacklisted
+    }
 
-entity "Appointment" {
-  *id : integer <<PK>>
-  --
-  *patient_id : integer <<FK>>
-  *doctor_id : integer <<FK>>
-  *slot_id : integer <<FK>>
-  *appointment_date : date
-  *appointment_time : time
-  status : string
-  booked_on : datetime
-}
-
-entity "BlacklistedPatient" {
-  *id : integer <<PK>>
-  --
-  *name : string
-  *email : string <<UK>>
-  phone : string
-  *reason : text
-  date_blacklisted : datetime
-}
-
-' Relationships
-specialization ||--o{ Doctor : "has"
-Doctor ||--o{ DoctorSlot : "creates"
-Doctor ||--o{ Appointment : "has"
-Patient ||--o{ Appointment : "makes"
-Patient ||--o{ PatientHistory : "has"
-DoctorSlot ||--o{ Appointment : "contains"
-Doctor }|--|| blacklist : "blacklisted"
-
-@enduml
+    specialization ||--o{ Doctor : "has many"
+    Doctor ||--o{ DoctorSlot : "creates"
+    Doctor ||--o{ Appointment : "has appointments"
+    Patient ||--o{ Appointment : "makes appointments"
+    Patient ||--o{ PatientHistory : "has history"
+    DoctorSlot ||--o{ Appointment : "contains"
+    Doctor }|--|| blacklist : "blacklisted via"
+    
+    %% Relationship details
+    Doctor }|--|| specialization : "belongs to specialization"
+    PatientHistory }|--|| Patient : "belongs to patient"
+    Appointment }|--|| DoctorSlot : "scheduled in slot"
+    Appointment }|--|| Doctor : "with doctor"
+    Appointment }|--|| Patient : "for patient"
 ```
 
 > ✅ **Note:** GitHub supports Mermaid diagrams. If it does not render, you can export this diagram as an image using Mermaid Live.
@@ -306,6 +294,7 @@ Student – IIT Madras
 This project was built as part of the **IIT Madras App Development coursework**, focusing on real‑world system design, authentication, and database modeling.
 
 If you like this project, consider giving it a ⭐ on GitHub!
+
 
 
 
