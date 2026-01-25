@@ -101,118 +101,31 @@ The database is designed using **relational modeling** with clear one-to-many re
 ### 📊 Entity Relationship (ER) Diagram
 
 ```mermaid
-erDiagram
-    Enquiry {
-        int id PK
-        string name
-        string email
-        string message
-    }
-
-    Admin {
-        int id PK
-        string username UK
-        string password
-    }
-
-    specialization {
-        int id PK
-        string name UK
-        text about
-    }
-
-    Doctor {
-        int id PK
-        string name
-        int specialization_id FK
-        string email UK
-        string username UK
-        string password
-        int experience
-        datetime added_on
-        string education
-        boolean blacklisted
-    }
-
-    blacklist {
-        int id PK
-        string email UK
-        text reason
-        datetime date_blacklisted
-    }
-
-    Patient {
-        int id PK
-        string name
-        string email UK
-        string phone
-        int age
-        string gender
-        date dob
-        text address
-        string blood_group
-        string emergency_contact_name
-        string emergency_contact_phone
-        datetime added_on
-        string password
-    }
-
-    PatientHistory {
-        int id PK
-        int patient_id FK
-        datetime date_recorded
-        text medical_history
-        text allergies
-        text current_medications
-        text notes
-    }
-
-    DoctorSlot {
-        int id PK
-        int doctor_id FK
-        date date
-        string slot_name
-        time start_time
-        time end_time
-        int max_patients
-        int current_patients
-        string status
-    }
-
-    Appointment {
-        int id PK
-        int patient_id FK
-        int doctor_id FK
-        int slot_id FK
-        date appointment_date
-        time appointment_time
-        string status
-        datetime booked_on
-    }
-
-    BlacklistedPatient {
-        int id PK
-        string name
-        string email UK
-        string phone
-        text reason
-        datetime date_blacklisted
-    }
-
-    specialization ||--o{ Doctor : "has many"
-    Doctor ||--o{ DoctorSlot : "creates"
-    Doctor ||--o{ Appointment : "has appointments"
-    Patient ||--o{ Appointment : "makes appointments"
-    Patient ||--o{ PatientHistory : "has history"
-    DoctorSlot ||--o{ Appointment : "contains"
-    Doctor }|--|| blacklist : "blacklisted via"
+digraph ERD {
+    rankdir=LR;
+    node [shape=box];
     
-    %% Relationship details
-    Doctor }|--|| specialization : "belongs to specialization"
-    PatientHistory }|--|| Patient : "belongs to patient"
-    Appointment }|--|| DoctorSlot : "scheduled in slot"
-    Appointment }|--|| Doctor : "with doctor"
-    Appointment }|--|| Patient : "for patient"
+    // Entities
+    Enquiry [label="Enquiry\nid (PK)\nname\nemail\nmessage"];
+    Admin [label="Admin\nid (PK)\nusername (UK)\npassword"];
+    Specialization [label="specialization\nid (PK)\nname (UK)\nabout"];
+    Doctor [label="Doctor\nid (PK)\nname\nspecialization_id (FK)\nemail (UK)\nusername (UK)\npassword\nexperience\nadded_on\neducation\nblacklisted"];
+    Blacklist [label="blacklist\nid (PK)\nemail (UK)\nreason\ndate_blacklisted"];
+    Patient [label="Patient\nid (PK)\nname\nemail (UK)\nphone\nage\ngender\ndob\naddress\nblood_group\nemergency_contact_name\nemergency_contact_phone\nadded_on\npassword"];
+    PatientHistory [label="PatientHistory\nid (PK)\npatient_id (FK)\ndate_recorded\nmedical_history\nallergies\ncurrent_medications\nnotes"];
+    DoctorSlot [label="DoctorSlot\nid (PK)\ndoctor_id (FK)\ndate\nslot_name\nstart_time\nend_time\nmax_patients\ncurrent_patients\nstatus"];
+    Appointment [label="Appointment\nid (PK)\npatient_id (FK)\ndoctor_id (FK)\nslot_id (FK)\nappointment_date\nappointment_time\nstatus\nbooked_on"];
+    BlacklistedPatient [label="BlacklistedPatient\nid (PK)\nname\nemail (UK)\nphone\nreason\ndate_blacklisted"];
+    
+    // Relationships
+    Specialization -> Doctor [label="1:N"];
+    Doctor -> DoctorSlot [label="1:N"];
+    Doctor -> Appointment [label="1:N"];
+    Patient -> Appointment [label="1:N"];
+    Patient -> PatientHistory [label="1:N"];
+    DoctorSlot -> Appointment [label="1:N"];
+    Doctor -> Blacklist [style=dashed, label="blacklisted"];
+}
 ```
 
 > ✅ **Note:** GitHub supports Mermaid diagrams. If it does not render, you can export this diagram as an image using Mermaid Live.
@@ -294,6 +207,7 @@ Student – IIT Madras
 This project was built as part of the **IIT Madras App Development coursework**, focusing on real‑world system design, authentication, and database modeling.
 
 If you like this project, consider giving it a ⭐ on GitHub!
+
 
 
 
