@@ -1,7 +1,7 @@
 ﻿# 🏥 Hospital Management System (HMS)
 
 A full‑stack **Hospital Management System web application** built using **Flask** and **SQLAlchemy**, designed to manage interactions between **Admins, Doctors, and Patients** through role‑based access and secure workflows. This project was developed as part of the **IIT Madras BS Program – App Development Project**.
-
+https://hospital-management-project-0t91.onrender.com
 ---
 
 ## ✨ Key Features
@@ -294,6 +294,7 @@ Student – IIT Madras
 This project was built as part of the **IIT Madras App Development coursework**, focusing on real‑world system design, authentication, and database modeling.
 
 If you like this project, consider giving it a ⭐ on GitHub!
+
 
 
 
